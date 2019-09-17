@@ -22,7 +22,7 @@ function getStoricUri(){
   dateObj.setMonth(dateObj.getMonth()-1)
   date = dateObj.toISOString()
   date = date.substring(0,10)
-  return `${BASE_URI}AAPL&sort=newest&api_token=${APP_ID}`
+  return `https://api.worldtradingdata.com/api/v1/history?symbol=AAPL&sort=newest&date_from=${date}&api_token=${APP_ID}`
 }
 
 fetch(getDataUri())
@@ -60,7 +60,17 @@ fetch(getDataUri())
             document.getElementById("2").style.backgroundColor = "red";
           }
 
-          getStoricUri();
-          
+
+          fetch(getStoricUri())
+                .then((response) => response.json())
+                .then((body) =>{
+                  console.log(body)
+
+                /*
+                body.history.forEach(d => {
+
+                })*/
+
+                })
 
       })
