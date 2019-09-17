@@ -5,14 +5,24 @@ const BASE_URI="https://api.worldtradingdata.com/api/v1/stock?symbol="
 
 //https://api.worldtradingdata.com/api/v1/stock?symbol=AAPL,MSFT,HSBA.L&api_token=tMOgm8UlkcmqcOpPbI27kFGMy2BMLPeWZ4zwyh33UzJRCKFZKZ8U9pkSjpx6
 
+//https://api.worldtradingdata.com/api/v1/history?symbol=AAPL&sort=newest&api_token=demo
 let infos = []
 let data = []
 let i = 0;
-let c = 0;
+let date;
+let dateObj = new Date();
+let time;
 
 function getDataUri()
 {
   return `${BASE_URI}AAPL,RACE.MI&api_token=${APP_ID}`
+}
+
+function getStoricUri(){
+  dateObj.setMonth(dateObj.getMonth()-1)
+  date = dateObj.toISOString()
+  date = date.substring(0,10)
+  return `${BASE_URI}AAPL&sort=newest&api_token=${APP_ID}`
 }
 
 fetch(getDataUri())
@@ -34,23 +44,23 @@ fetch(getDataUri())
 
 //
           document.getElementById("1").innerHTML = infos[0].name + ": " + infos[0].value;
-          if (infos[0].earn >0){
+          if (infos[0].earn > 0){
             document.getElementById("1").style.backgroundColor = "lightgreen";
           }
           else {
-            document.getElementById("1").style.backgroundColor = "lightred";
+            document.getElementById("1").style.backgroundColor = "red";
           }
 
           document.getElementById("2").innerHTML = infos[1].name + ": " + infos[1].value;
           //document.getElementById("2").innerHTML = infos[1].name +  ": " + infos[1].value;
-          if (infos[1].earn >1){
+          if (infos[1].earn > 0){
             document.getElementById("2").style.backgroundColor = "lightgreen";
           }
           else {
             document.getElementById("2").style.backgroundColor = "red";
           }
 
+          getStoricUri();
+          
 
-        console.log(infos[1])
-        console.log(i)
       })
