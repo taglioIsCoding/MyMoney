@@ -9,6 +9,7 @@ const BASE_URI="https://api.worldtradingdata.com/api/v1/stock?symbol="
 let infos = []
 let data = []
 let i = 0;
+let c;
 let date;
 let dateObj = new Date();
 let time;
@@ -28,7 +29,7 @@ function getStoricUri(){
 fetch(getDataUri())
       .then((response) => response.json())
       .then((body) =>{
-        console.log(body.data)
+      //  console.log(body.data)
 
         body.data.forEach(q => {
           let info = {
@@ -63,14 +64,16 @@ fetch(getDataUri())
 
           fetch(getStoricUri())
                 .then((response) => response.json())
-                .then((body) =>{
-                  console.log(body)
+                .then((item) =>{
 
-                /*
-                body.history.forEach(d => {
 
-                })*/
+                  let test = Object.keys(item.history).map(function(key) {
+                      return [key, item.history[key]];
+                    });
 
+                    console.log(test)
+
+                  
                 })
 
       })
