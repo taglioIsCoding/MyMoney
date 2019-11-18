@@ -16,7 +16,7 @@ let time;
 
 
 function getDataUri() {
-  return `${BASE_URI}AAPL,RACE.MI&api_token=${APP_ID}`
+  return `${BASE_URI}AAPL,RACE.MI,VOW3.DE&api_token=${APP_ID}`
 }
 
 function getStoricUri() {
@@ -30,8 +30,14 @@ function getStoricUriF(){
   dateObj.setMonth(dateObj.getMonth())
   date = dateObj.toISOString()
   date = date.substring(0, 10)
-  console.log(date)
   return `https://api.worldtradingdata.com/api/v1/history?symbol=RACE.MI&sort=newest&date_from=${date}&api_token=${APP_ID}`
+}
+
+function getStoricUriV(){
+  dateObj.setMonth(dateObj.getMonth())
+  date = dateObj.toISOString()
+  date = date.substring(0, 10)
+  return `https://api.worldtradingdata.com/api/v1/history?symbol=VOW3.DE&sort=newest&date_from=${date}&api_token=${APP_ID}`
 }
 
 function addAll() {
@@ -43,11 +49,17 @@ function addAll() {
   }
 
   document.getElementById("2").innerHTML = infos[1].name + ": " + infos[1].value;
-  //document.getElementById("2").innerHTML = infos[1].name +  ": " + infos[1].value;
   if (infos[1].earn > 0) {
     document.getElementById("2").style.backgroundColor = "lightgreen";
   } else {
     document.getElementById("2").style.backgroundColor = "red";
+  }
+
+  document.getElementById("3").innerHTML = infos[2].name + ": " + infos[2].value;
+  if (infos[1].earn > 0) {
+    document.getElementById("3").style.backgroundColor = "lightgreen";
+  } else {
+    document.getElementById("3").style.backgroundColor = "red";
   }
 }
 
@@ -128,19 +140,19 @@ fetch(getStoricUriF())
   .then((item) => {
 
 
-     dayPrice = Object.keys(item.history).map(function(key) {
+     dayPrice1 = Object.keys(item.history).map(function(key) {
       return {day: key, data: item.history[key]};
     });
   })
   .then((item)=>{
 
     var dates = []
-    dayPrice.reverse()
-    dayPrice.forEach(d => {
+    dayPrice1.reverse()
+    dayPrice1.forEach(d => {
         dates.push(d.day.slice(4-9))
     })
     var prices = []
-    dayPrice.forEach(d => {
+    dayPrice1.forEach(d => {
         prices.push(d.data.close)
     })
 
@@ -157,6 +169,54 @@ fetch(getStoricUriF())
           maintainAspectRatio: false,
           borderColor: 'rgb(255,127,80, 1)',
           backgroundColor: 'rgb(255,165,0, 0.2)',
+          label: 'Price',
+          lineTension: 0,
+          data: prices,//y
+          datalabels: { //valore
+            align: 'end',
+            anchor: 'end'
+          }
+        }
+      ]
+    }
+  });//grafico
+})
+
+//STORICO volkswaghen
+fetch(getStoricUriV())
+  .then((response) => response.json())
+  .then((item) => {
+
+
+     dayPrice2 = Object.keys(item.history).map(function(key) {
+      return {day: key, data: item.history[key]};
+    });
+  })
+  .then((item)=>{
+
+    dayPrice2.reverse()
+    var dates = []
+    dayPrice2.forEach(d => {
+        dates.push(d.day.slice(4-9))
+    })
+    var prices = []
+    dayPrice2.forEach(d => {
+        prices.push(d.data.close)
+    })
+    console.log(dates)
+    //grafico apple
+    var ctx = document.getElementById('tree');
+    var myLineChart = new Chart(ctx, {
+    type: 'line',
+
+    data: {
+      labels: dates,
+      //x
+      datasets:[
+        {
+          maintainAspectRatio: false,
+          borderColor: 'rgb(0,100,0, 1)',
+          backgroundColor: 'rgb(32,178,170, 0.2)',
           label: 'Price',
           lineTension: 0,
           data: prices,//y
